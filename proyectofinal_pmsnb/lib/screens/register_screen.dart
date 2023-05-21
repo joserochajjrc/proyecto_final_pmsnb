@@ -87,13 +87,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final btnRregister = ElevatedButton(
       onPressed: () {
         if (formKey.currentState!.validate()) {
-<<<<<<< HEAD
           emailAuth.createUserWithEmailAndPassword(email: conEmail.text, password: conPass.text);
           Navigator.pushNamed(context, '/login');
-=======
-          emailAuth.createUserWithEmailAndPassword(
-              email: conEmail.text, password: conPass.text);
->>>>>>> 88a6557d919d177d38d70bc3d0779b4166da8205
         }
       },
       style: ElevatedButton.styleFrom(
@@ -167,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fit: BoxFit.cover,
                             )
                           : Image.asset(
-                              '../assets/avatar.png',
+                              'assets/avatar.png',
                               width: 150,
                             ),
                     ),
