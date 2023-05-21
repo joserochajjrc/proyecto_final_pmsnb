@@ -85,69 +85,59 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final txtEmail = TextFormField(
       decoration: const InputDecoration(
-        label: Text('Email User'),
-        enabledBorder: OutlineInputBorder()
-      ),
+          label: Text('Email User'), enabledBorder: OutlineInputBorder()),
     );
 
     final txtPass = TextFormField(
       obscureText: true,
       decoration: const InputDecoration(
-        label: Text('Password User'),
-        enabledBorder: OutlineInputBorder()
-      ),
+          label: Text('Password User'), enabledBorder: OutlineInputBorder()),
     );
 
     const spaceHorizontal = SizedBox(height: 15);
 
     final btnLogin = SocialLoginButton(
-      buttonType: SocialLoginButtonType.generalLogin, 
-      onPressed: (){
-        isLoading = true;
-        setState(() {});
-        Future.delayed(Duration(milliseconds: 3000)).then((value){
-          isLoading = false;
+        buttonType: SocialLoginButtonType.generalLogin,
+        onPressed: () {
+          isLoading = true;
           setState(() {});
-          Navigator.pushNamed(context, '/dash');
+          Future.delayed(Duration(milliseconds: 3000)).then((value) {
+            isLoading = false;
+            setState(() {});
+            Navigator.pushNamed(context, '/dash');
+          });
         });
-      }
-    );
 
     final btnGoogle = SocialLoginButton(
-      buttonType: SocialLoginButtonType.google, 
-      onPressed: (){
-        emailAuth.signInWithGoogle(context);
+        buttonType: SocialLoginButtonType.google,
+        onPressed: () {
+          emailAuth.signInWithGoogle(context);
           isLoading = true;
           setState(() {});
           Future.delayed(const Duration(milliseconds: 3000)).then((value) {
             isLoading = false;
             setState(() {});
             Navigator.pushNamed(context, '/dashboard');
-      });
-    });
+          });
+        });
 
     final btnFacebook = SocialLoginButton(
-      buttonType: SocialLoginButtonType.facebook, 
-      onPressed: (){}
-    );
+        buttonType: SocialLoginButtonType.facebook, onPressed: () {});
 
     final btngithub = SocialLoginButton(
-      buttonType: SocialLoginButtonType.github, 
-      onPressed: (){
-        onClickGitHubLoginButton();
-      }
-    );
+        buttonType: SocialLoginButtonType.github,
+        onPressed: () {
+          onClickGitHubLoginButton();
+        });
 
     final txtRegister = Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextButton(
-        onPressed: (){
-          Navigator.pushNamed(context, '/register');
-        }, 
-        child: const Text('Crear cuenta :)', 
-          style: TextStyle(decoration: TextDecoration.underline)
-        )
-      ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/register');
+          },
+          child: const Text('Crear cuenta :)',
+              style: TextStyle(decoration: TextDecoration.underline))),
     );
 
     return Scaffold(
@@ -158,16 +148,14 @@ class _LoginScreenState extends State<LoginScreen> {
             height: MediaQuery.of(context).size.height,
             child: responsive(
               mobile: MobileLoginScreen(
-                spaceHorizontal: spaceHorizontal, 
-                btnRegister: txtRegister,
-                txtEmail: txtEmail, 
-                txtPass: txtPass, 
-                btnLogin: btnLogin, 
-                btnGoogle: btnGoogle, 
-                btnFacebook: btnFacebook, 
-                btngithub: btngithub
-              ),
-
+                  spaceHorizontal: spaceHorizontal,
+                  btnRegister: txtRegister,
+                  txtEmail: txtEmail,
+                  txtPass: txtPass,
+                  btnLogin: btnLogin,
+                  btnGoogle: btnGoogle,
+                  btnFacebook: btnFacebook,
+                  btngithub: btngithub),
               desktop: Row(
                 children: [
                   Expanded(
@@ -180,8 +168,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(
                             child: LoginScreenTopWidget(
-                                spaceHorizontal: spaceHorizontal,
-                                btnRegister: txtRegister,))
+                          spaceHorizontal: spaceHorizontal,
+                          btnRegister: txtRegister,
+                        ))
                       ],
                     ),
                   ),
@@ -192,20 +181,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: 450,
                           child: LoginForm(
-                              txtEmail: txtEmail,
-                              spaceHorizontal: spaceHorizontal,
-                              txtPass: txtPass,
-                              btnLogin: btnLogin,
-                              btnGoogle: btnGoogle,
-                              btnFacebook: btnFacebook,
-                              btngithub: btngithub,),
+                            txtEmail: txtEmail,
+                            spaceHorizontal: spaceHorizontal,
+                            txtPass: txtPass,
+                            btnLogin: btnLogin,
+                            btnGoogle: btnGoogle,
+                            btnFacebook: btnFacebook,
+                            btngithub: btngithub,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-
               tablet: Row(
                 children: [
                   Expanded(
@@ -218,8 +207,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(
                             child: LoginScreenTopWidget(
-                                spaceHorizontal: spaceHorizontal,
-                                btnRegister: txtRegister,))
+                          spaceHorizontal: spaceHorizontal,
+                          btnRegister: txtRegister,
+                        ))
                       ],
                     ),
                   ),
@@ -230,13 +220,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: 450,
                           child: LoginForm(
-                              txtEmail: txtEmail,
-                              spaceHorizontal: spaceHorizontal,
-                              txtPass: txtPass,
-                              btnLogin: btnLogin,
-                              btnGoogle: btnGoogle,
-                              btnFacebook: btnFacebook,
-                              btngithub: btngithub,),
+                            txtEmail: txtEmail,
+                            spaceHorizontal: spaceHorizontal,
+                            txtPass: txtPass,
+                            btnLogin: btnLogin,
+                            btnGoogle: btnGoogle,
+                            btnFacebook: btnFacebook,
+                            btngithub: btngithub,
+                          ),
                         ),
                       ],
                     ),
@@ -282,15 +273,17 @@ class MobileLoginScreen extends StatelessWidget {
         children: [
           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             const SizedBox(height: 100, child: TopLoginImage()),
-            LoginScreenTopWidget(spaceHorizontal: spaceHorizontal, btnRegister: btnRegister),
+            LoginScreenTopWidget(
+                spaceHorizontal: spaceHorizontal, btnRegister: btnRegister),
             LoginForm(
-                txtEmail: txtEmail,
-                spaceHorizontal: spaceHorizontal,
-                txtPass: txtPass,
-                btnLogin: btnLogin,
-                btnGoogle: btnGoogle,
-                btnFacebook: btnFacebook,
-                btngithub: btngithub,),
+              txtEmail: txtEmail,
+              spaceHorizontal: spaceHorizontal,
+              txtPass: txtPass,
+              btnLogin: btnLogin,
+              btnGoogle: btnGoogle,
+              btnFacebook: btnFacebook,
+              btngithub: btngithub,
+            ),
           ]),
         ],
       ),
@@ -328,7 +321,6 @@ class LoginForm extends StatelessWidget {
         spaceHorizontal,
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          
         ),
         btnLogin,
         spaceHorizontal,
@@ -386,7 +378,7 @@ class TopLoginImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      '../assets/logoapp.png',
+      'assets/logoapp.png',
       height: 250,
     );
   }
