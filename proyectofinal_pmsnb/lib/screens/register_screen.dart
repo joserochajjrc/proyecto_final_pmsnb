@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 //import 'package:pmsnb1/firebase/email_auth.dart';
 
+import '../services/email_authentication.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -34,7 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     
   }
 
-  //EmailAuth emailAuth = EmailAuth();
+  EmailAuth emailAuth = EmailAuth();
   TextEditingController conEmail = TextEditingController();
   TextEditingController conPass = TextEditingController();
 
@@ -92,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final btnRregister = ElevatedButton(
       onPressed: (){
         if (formKey.currentState!.validate()) {
-          //emailAuth.createUserWithEmailAndPassword(email: conEmail.text, password: conPass.text);
+          emailAuth.createUserWithEmailAndPassword(email: conEmail.text, password: conPass.text);
         }
       }, 
       

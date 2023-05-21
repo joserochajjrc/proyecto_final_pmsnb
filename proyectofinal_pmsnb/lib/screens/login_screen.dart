@@ -1,7 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/responsive.dart';
+
+EmailAuth emailAuth = EmailAuth();
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,12 +18,71 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   bool isLoading = false;
+  late StreamSubscription _subs;
+  bool loader = false;
+
+  @override
+  void initState() {
+    loader = false;
+    _initDeepLinkListener();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _disposeDeepLinkListener();
+    super.dispose();
+  }
+
+  void _initDeepLinkListener() async {
+    _subs = getLinksStream().listen((link) {
+      _checkDeepLink(link!);
+    }, cancelOnError: true);
+  }
+
+  void _checkDeepLink(String link) {
+    if (link != null) {
+      String code = link.substring(link.indexOf(RegExp('code=')) + 5);
+      emailAuth.signInWithGithub(code).then((firebaseUser) {
+        print(firebaseUser.email);
+        print(firebaseUser.photoURL);
+        print("LOGGED IN AS: ${firebaseUser.displayName}");
+      }).catchError((e) {
+        print("LOGIN ERROR: " + e.toString());
+      });
+    }
+  }
+
+  void _disposeDeepLinkListener() {
+    if (_subs != null) {
+      _subs.cancel();
+    }
+  }
+
+  void onClickGitHubLoginButton() async {
+    const String url =
+        "https://github.com/login/oauth/authorize?client_id=15b6215cdb2ddf501d02&scope=public_repo%20read:user%20user:email";
+
+    if (await canLaunch(url)) {
+      setState(() {
+        loader = true;
+      });
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+    } else {
+      setState(() {
+        loader = false;
+      });
+      print("CANNOT LAUNCH THIS URL!");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     final txtEmail = TextFormField(
       decoration: const InputDecoration(
         label: Text('Email User'),
@@ -32,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    final spaceHorizontal = SizedBox(height: 15,);
+    const spaceHorizontal = SizedBox(height: 15);
 
     final btnLogin = SocialLoginButton(
       buttonType: SocialLoginButtonType.generalLogin, 
@@ -49,8 +115,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final btnGoogle = SocialLoginButton(
       buttonType: SocialLoginButtonType.google, 
-      onPressed: (){}
-    );
+      onPressed: (){
+        emailAuth.signInWithGoogle(context);
+          isLoading = true;
+          setState(() {});
+          Future.delayed(const Duration(milliseconds: 3000)).then((value) {
+            isLoading = false;
+            setState(() {});
+            Navigator.pushNamed(context, '/dashboard');
+      });
+    });
 
     final btnFacebook = SocialLoginButton(
       buttonType: SocialLoginButtonType.facebook, 
@@ -59,7 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final btngithub = SocialLoginButton(
       buttonType: SocialLoginButtonType.github, 
-      onPressed: (){}
+      onPressed: (){
+        onClickGitHubLoginButton();
+      }
     );
 
     final txtRegister = Padding(
@@ -168,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
