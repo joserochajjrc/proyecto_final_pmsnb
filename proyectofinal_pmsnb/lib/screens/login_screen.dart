@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Future.delayed(const Duration(milliseconds: 3000)).then((value) {
             isLoading = false;
             setState(() {});
-            Navigator.pushNamed(context, '/dashboard');
+            Navigator.pushNamed(context, '/dash');
           });
         });
 
@@ -138,6 +138,14 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           child: const Text('Crear cuenta :)',
               style: TextStyle(decoration: TextDecoration.underline))),
+    );
+
+    final btnForgot = TextButton(
+      onPressed: () {},
+      child: const Text(
+        "Olvidaste la constraseña?",
+        style: TextStyle(color: Color.fromARGB(255, 126, 173, 255)),
+      ),
     );
 
     return Scaffold(
