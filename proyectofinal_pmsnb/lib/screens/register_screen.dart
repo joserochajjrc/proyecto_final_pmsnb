@@ -16,14 +16,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
   final formKey = GlobalKey<FormState>();
   File? _image;
 
   Future getImage(ImageSource source) async {
-    try{
+    try {
       final image = await ImagePicker().pickImage(source: source);
-      if( image == null ) return;
+      if (image == null) return;
 
       final imageTemporary = File(image.path);
 
@@ -33,7 +32,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
-    
   }
 
   EmailAuth emailAuth = EmailAuth();
@@ -42,12 +40,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final txtName = TextFormField(
       decoration: const InputDecoration(
-        label: Text('Name User'),
-        enabledBorder: OutlineInputBorder()
-      ),
+          label: Text('Name User'), enabledBorder: OutlineInputBorder()),
       validator: (value) {
         if (value != null && value.isEmpty) {
           return 'Ingresa un nombre';
@@ -58,95 +53,85 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     final txtEmail = TextFormField(
-      controller: conEmail,
-      decoration: const InputDecoration(
-        label: Text('Email User'),
-        enabledBorder: OutlineInputBorder()
-      ),
-      validator: (value) {
+        controller: conEmail,
+        decoration: const InputDecoration(
+            label: Text('Email User'), enabledBorder: OutlineInputBorder()),
+        validator: (value) {
           if (value != null && !EmailValidator.validate(value)) {
             return 'Ingresa un correo valido';
           } else {
             return null;
           }
-        }
-    );
+        });
 
     final txtPass = TextFormField(
-      controller: conPass,
-      obscureText: true,
-      decoration: const InputDecoration(
-        label: Text('Password User'),
-        enabledBorder: OutlineInputBorder()
-      ),
-      validator: (value) {
+        controller: conPass,
+        obscureText: true,
+        decoration: const InputDecoration(
+            label: Text('Password User'), enabledBorder: OutlineInputBorder()),
+        validator: (value) {
           if (value != null && value.isEmpty) {
             return 'Ingresa una contraseña';
           } else {
             return null;
           }
-      }
+        });
+
+    final spaceHorizontal = SizedBox(
+      height: 15,
+    );
+    final spaceGiant = SizedBox(
+      height: 60,
     );
 
-    final spaceHorizontal = SizedBox(height: 15,);
-    final spaceGiant = SizedBox(height: 60,);
-
     final btnRregister = ElevatedButton(
-      onPressed: (){
+      onPressed: () {
         if (formKey.currentState!.validate()) {
+<<<<<<< HEAD
           emailAuth.createUserWithEmailAndPassword(email: conEmail.text, password: conPass.text);
           Navigator.pushNamed(context, '/login');
+=======
+          emailAuth.createUserWithEmailAndPassword(
+              email: conEmail.text, password: conPass.text);
+>>>>>>> 88a6557d919d177d38d70bc3d0779b4166da8205
         }
-      }, 
-      
+      },
       style: ElevatedButton.styleFrom(
-        elevation: 10.0,
-        textStyle: const TextStyle(color: Colors.white, fontSize: 20),
-        fixedSize: const Size(800, 60)
-      ),
-      
+          elevation: 10.0,
+          textStyle: const TextStyle(color: Colors.white, fontSize: 20),
+          fixedSize: const Size(800, 60)),
       child: const Text('Registrarse'),
     );
 
     final btnGallery = ElevatedButton(
-      onPressed: (){
-        getImage(ImageSource.gallery);
-      }, 
-
-      style: ElevatedButton.styleFrom(
-        fixedSize: const Size(200, 50)
-      ),
-
-      child: Row(
-        children: [
-          Icon(Icons.image_outlined),
-          SizedBox(
-            width: 20,
-          ),
-          Text('Pick from Gallery')
-        ],
-      )
-    );
+        onPressed: () {
+          getImage(ImageSource.gallery);
+        },
+        style: ElevatedButton.styleFrom(fixedSize: const Size(200, 50)),
+        child: Row(
+          children: [
+            Icon(Icons.image_outlined),
+            SizedBox(
+              width: 20,
+            ),
+            Text('Pick from Gallery')
+          ],
+        ));
 
     final btnCamera = ElevatedButton(
-      onPressed: (){
-        getImage(ImageSource.camera);
-      }, 
-
-      style: ElevatedButton.styleFrom(
-        fixedSize: const Size(200, 50)
-      ),
-
-      child: Row(
-        children: [
-          Icon(Icons.camera),
-          SizedBox(
-            width: 20,
-          ),
-          Text('Pick from Camera')
-        ],
-      )
-    );
+        onPressed: () {
+          getImage(ImageSource.camera);
+        },
+        style: ElevatedButton.styleFrom(fixedSize: const Size(200, 50)),
+        child: Row(
+          children: [
+            Icon(Icons.camera),
+            SizedBox(
+              width: 20,
+            ),
+            Text('Pick from Camera')
+          ],
+        ));
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -174,8 +159,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     spaceHorizontal,
                     spaceHorizontal,
                     ClipOval(
-                      child: _image != null ? Image.file(_image!, width: 150, height: 150, fit: BoxFit.cover, ) : 
-                      Image.asset('../assets/avatar.png', width: 150,),
+                      child: _image != null
+                          ? Image.file(
+                              _image!,
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              'assets/avatar.png',
+                              width: 150,
+                            ),
                     ),
                     spaceHorizontal,
                     spaceHorizontal,
