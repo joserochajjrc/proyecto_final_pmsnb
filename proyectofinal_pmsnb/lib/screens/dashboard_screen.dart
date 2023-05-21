@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyectofinal_pmsnb/models/recipe.api.dart';
-import 'package:proyectofinal_pmsnb/models/recipe.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
 import 'package:proyectofinal_pmsnb/network/api_spoonacular.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
-import 'package:proyectofinal_pmsnb/widgets/recipe_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -14,14 +11,13 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-
   //late List<Recipe> _recipes;
- bool _isLoading = true;
+  bool _isLoading = true;
 
   ApiSpoonacular? apiSpoonacular;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     //getRecipes();
     apiSpoonacular = ApiSpoonacular();
@@ -37,21 +33,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:  Row(children: [
+      appBar: AppBar(
+          title: Row(children: [
         Icon(Icons.restaurant_menu),
-        SizedBox(width: 10,),
-        Text('Bienvenido ')])
-      ),
+        SizedBox(
+          width: 10,
+        ),
+        Text('Bienvenido ')
+      ])),
       drawer: Drawer(
         child: ListView(
           children: [
             const UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage('https://raw.githubusercontent.com/obliviate-dan/Login-Form/master/img/avatar.png'),
-              ),
-              accountName: Text('José Juan Rocha Cisneros'), 
-              accountEmail: Text('19031005@itcelaya.edu.mx')
-            ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://raw.githubusercontent.com/obliviate-dan/Login-Form/master/img/avatar.png'),
+                ),
+                accountName: Text('José Juan Rocha Cisneros'),
+                accountEmail: Text('19031005@itcelaya.edu.mx')),
           ],
         ),
       ),
@@ -71,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         future: apiSpoonacular!.getAllRecipes(),
         builder: (context, AsyncSnapshot<List<RecipeModel>?> snapshot) {
           return InkWell(
-            onTap: (){},
+            onTap: () {},
             child: GridView.builder(
               padding: const EdgeInsets.all(10),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
