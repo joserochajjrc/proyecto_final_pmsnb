@@ -88,7 +88,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       onPressed: () {
         if (formKey.currentState!.validate()) {
           emailAuth.createUserWithEmailAndPassword(email: conEmail.text, password: conPass.text);
-          Navigator.pushNamed(context, '/login');
         }
       },
       style: ElevatedButton.styleFrom(
