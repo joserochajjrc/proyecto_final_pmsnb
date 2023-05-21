@@ -162,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fit: BoxFit.cover,
                             )
                           : Image.asset(
-                              'assets/avatar.png',
+                              '../assets/avatar.png',
                               width: 150,
                             ),
                     ),
