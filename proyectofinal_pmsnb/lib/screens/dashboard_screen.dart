@@ -127,8 +127,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         crossAxisSpacing: 10,
                       ),
                       itemBuilder: (context, index) {
-                        RecipeModel model = snapshot.data![index];
                         if (snapshot.hasData) {
+                          RecipeModel model = snapshot.data![index];
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
