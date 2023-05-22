@@ -76,57 +76,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
                 ),
-                accountName: Text('José Juan Rocha Cisneros'),
-                accountEmail: Text('19031005@itcelaya.edu.mx')),
-          ],
-        ),
-      ),
-      /*body: _isLoading ? Center(child: CircularProgressIndicator())
-                       : ListView.builder(
-                          itemCount: _recipes.length,
-                          itemBuilder: (context, index) {
-                            return RecipeCard(
-                              title: _recipes[index].name, 
-                              cookTime: _recipes[index].totalTime, 
-                              rating: _recipes[index].rating.toString(), 
-                              thumbnailUrl: _recipes[index].images
-                            );
-                          },
-                       )*/
-      body: FutureBuilder(
-        future: apiSpoonacular!.getAllRecipes(),
-        builder: (context, AsyncSnapshot<List<RecipeModel>?> snapshot) {
-          return InkWell(
-            onTap: () {},
-            child: GridView.builder(
-              padding: const EdgeInsets.all(10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                mainAxisSpacing: 10,
-                childAspectRatio: 2,
-                crossAxisSpacing: 10,
-              ),
-              itemBuilder: (context, index) {
-                RecipeModel model = snapshot.data![index];
-                if (snapshot.hasData) {
-                   return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    detailsRecipe(recipeModel: model,)));
-                      },
-                      child:
-                          ItemSpoonacular(recipeModel: snapshot.data![index]),
-                    );
-                } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Algo salio mal :()'),
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
               ),
               Tab(
                 child: Row(
@@ -148,6 +97,68 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ],
           ),
+        ),
+        /*body: _isLoading ? Center(child: CircularProgressIndicator())
+                       : ListView.builder(
+                          itemCount: _recipes.length,
+                          itemBuilder: (context, index) {
+                            return RecipeCard(
+                              title: _recipes[index].name, 
+                              cookTime: _recipes[index].totalTime, 
+                              rating: _recipes[index].rating.toString(), 
+                              thumbnailUrl: _recipes[index].images
+                            );
+                          },
+                       )*/
+        body: TabBarView(
+          children: [
+            FutureBuilder(
+              future: apiSpoonacular!.getAllRecipes(),
+              builder: (context, AsyncSnapshot<List<RecipeModel>?> snapshot) {
+                return InkWell(
+                  onTap: () {},
+                  child: GridView.builder(
+                      padding: const EdgeInsets.all(10),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 2,
+                        crossAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) {
+                        RecipeModel model = snapshot.data![index];
+                        if (snapshot.hasData) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          detailsRecipe(
+                                            recipeModel: model,
+                                          )));
+                            },
+                            child: ItemSpoonacular(
+                                recipeModel: snapshot.data![index]),
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Center(
+                            child: Text('Algo salio mal :()'),
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }),
+                );
+              },
+            ),
+
+            //ListPostCloudScreen(),
+            Center(
+              child: Text('aqui va la bd de firebase'),
+            ),
+          ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -198,47 +209,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               );
                             },
                          )*/
-        body: TabBarView(
-          children: [
-            FutureBuilder(
-              future: apiSpoonacular!.getAllRecipes(),
-              builder: (context, AsyncSnapshot<List<RecipeModel>?> snapshot) {
-                return InkWell(
-                  onTap: () {},
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(10),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: .8,
-                      crossAxisSpacing: 10,
-                    ),
-                    itemBuilder: (context, index) {
-                      if (snapshot.hasData) {
-                        return ItemSpoonacular(
-                            recipeModel: snapshot.data![index]);
-                      } else if (snapshot.hasError) {
-                        return const Center(
-                          child: Text('Algo salio mal :()'),
-                        );
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                    itemCount: snapshot.data != null
-                        ? snapshot.data!.length
-                        : 0, //snapshot.data!.length,
-                  ),
-                );
-              },
-            ),
-            //ListPostCloudScreen(),
-            Center(
-              child: Text('aqui va la bd de firebase'),
-            ),
-          ],
-        ),
+
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             Navigator.pushNamed(context, '/post');
