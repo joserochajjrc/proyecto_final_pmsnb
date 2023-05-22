@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
 import 'package:proyectofinal_pmsnb/network/api_spoonacular.dart';
 import 'package:proyectofinal_pmsnb/screens/details_recipe.dart';
+import 'package:proyectofinal_pmsnb/screens/post_screen.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
+
+import '../provider/theme_provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,6 +16,11 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  void _toggleTheme(theme) {
+    final settings = Provider.of<ThemeProvider>(context, listen: false);
+    settings.toggleTheme(theme);
+  }
+
   //late List<Recipe> _recipes;
   bool _isLoading = true;
 
@@ -33,22 +42,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Row(children: [
-        Icon(Icons.restaurant_menu),
-        SizedBox(
-          width: 10,
-        ),
-        Text('Bienvenido ')
-      ])),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const UserAccountsDrawerHeader(
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://raw.githubusercontent.com/obliviate-dan/Login-Form/master/img/avatar.png'),
+    ThemeProvider theme = Provider.of<ThemeProvider>(context);
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Row(
+            children: [
+              Icon(Icons.restaurant_menu),
+              SizedBox(
+                width: 10,
+              ),
+              Text('Bienvenido '),
+            ],
+          ),
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.home,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      ' Inicio',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 accountName: Text('José Juan Rocha Cisneros'),
                 accountEmail: Text('19031005@itcelaya.edu.mx')),
@@ -101,13 +127,125 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 } else {
                   return const CircularProgressIndicator();
                 }
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.group,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      ' Social',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              const UserAccountsDrawerHeader(
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://raw.githubusercontent.com/obliviate-dan/Login-Form/master/img/avatar.png'),
+                  ),
+                  accountName: Text('José Juan Rocha Cisneros'),
+                  accountEmail: Text('19031005@itcelaya.edu.mx')),
+              DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  value: theme.getTheme(),
+                  decoration: const InputDecoration(
+                    labelText: 'Tema',
+                    prefixIcon: Icon(Icons.color_lens),
+                  ),
+                  items: <String>['light', 'eco'].map((i) {
+                    return DropdownMenuItem(
+                        value: i,
+                        child: Text(
+                          i,
+                        ));
+                  }).toList(),
+                  hint: const Text('Tema'),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  onChanged: (value) {
+                    if (value == 'light') {
+                      _toggleTheme('light');
+                    }
+                    if (value == 'eco') {
+                      _toggleTheme('eco');
+                    }
+                  }),
+            ],
+          ),
+        ),
+        /*body: _isLoading ? Center(child: CircularProgressIndicator())
+                         : ListView.builder(
+                            itemCount: _recipes.length,
+                            itemBuilder: (context, index) {
+                              return RecipeCard(
+                                title: _recipes[index].name, 
+                                cookTime: _recipes[index].totalTime, 
+                                rating: _recipes[index].rating.toString(), 
+                                thumbnailUrl: _recipes[index].images
+                              );
+                            },
+                         )*/
+        body: TabBarView(
+          children: [
+            FutureBuilder(
+              future: apiSpoonacular!.getAllRecipes(),
+              builder: (context, AsyncSnapshot<List<RecipeModel>?> snapshot) {
+                return InkWell(
+                  onTap: () {},
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: .8,
+                      crossAxisSpacing: 10,
+                    ),
+                    itemBuilder: (context, index) {
+                      if (snapshot.hasData) {
+                        return ItemSpoonacular(
+                            recipeModel: snapshot.data![index]);
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('Algo salio mal :()'),
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                    itemCount: snapshot.data != null
+                        ? snapshot.data!.length
+                        : 0, //snapshot.data!.length,
+                  ),
+                );
               },
-              itemCount: snapshot.data != null
-                  ? snapshot.data!.length
-                  : 0, //snapshot.data!.length,
             ),
-          );
-        },
+            //ListPostCloudScreen(),
+            Center(
+              child: Text('aqui va la bd de firebase'),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, '/post');
+          },
+          label: const Text('Publicar'),
+          icon: const Icon(Icons.food_bank),
+        ),
       ),
     );
   }
