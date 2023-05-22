@@ -7,6 +7,6 @@ Map<String, WidgetBuilder> getApplicationRoutes(){
   return <String, WidgetBuilder>{
     '/login':(BuildContext context) => LoginScreen(),
     '/dash':(BuildContext context) => DashboardScreen(),
-    '/register':(BuildContext context) => RegisterScreen()
+    '/register':(BuildContext context) => RegisterScreen(),
   };
 }

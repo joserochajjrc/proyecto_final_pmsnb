@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
 import 'package:proyectofinal_pmsnb/network/api_spoonacular.dart';
+import 'package:proyectofinal_pmsnb/screens/details_recipe.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -74,14 +75,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: GridView.builder(
               padding: const EdgeInsets.all(10),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: 1,
                 mainAxisSpacing: 10,
-                childAspectRatio: .8,
+                childAspectRatio: 2,
                 crossAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
+                RecipeModel model = snapshot.data![index];
                 if (snapshot.hasData) {
-                  return ItemSpoonacular(recipeModel: snapshot.data![index]);
+                   return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    detailsRecipe(recipeModel: model,)));
+                      },
+                      child:
+                          ItemSpoonacular(recipeModel: snapshot.data![index]),
+                    );
                 } else if (snapshot.hasError) {
                   return const Center(
                     child: Text('Algo salio mal :()'),
