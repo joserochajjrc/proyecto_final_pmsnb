@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
 import 'package:proyectofinal_pmsnb/network/api_spoonacular.dart';
 import 'package:proyectofinal_pmsnb/screens/details_recipe.dart';
+import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
 
 import '../provider/theme_provider.dart';
@@ -39,6 +40,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }*/
 
+  EmailAuth emailAuth = EmailAuth();
+
   @override
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
@@ -47,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Row(
+          title: Row(
             children: [
               Icon(Icons.restaurant_menu),
               SizedBox(
@@ -56,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Text('Bienvenido '),
             ],
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
               Tab(
                 child: Row(
@@ -175,6 +178,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   accountName: Text('José Juan Rocha Cisneros'),
                   accountEmail: Text('19031005@itcelaya.edu.mx')),
+                  ListTile(
+                    onTap: () {
+                      emailAuth.signOut();
+                      Navigator.pushNamed(context, '/login');
+                    },
+                    horizontalTitleGap: 0.0,
+                    leading: const Icon(Icons.add_to_home_screen),
+                    title: const Text(
+                      'Cerrar Sesión',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+              ),
               DropdownButtonFormField<String>(
                   isExpanded: true,
                   value: theme.getTheme(),
@@ -190,7 +206,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ));
                   }).toList(),
                   hint: const Text('Tema'),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //padding: const EdgeInsets.symmetric(horizontal: 10),
                   onChanged: (value) {
                     if (value == 'light') {
                       _toggleTheme('light');

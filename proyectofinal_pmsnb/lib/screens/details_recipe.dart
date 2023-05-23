@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 //import 'package:flutter_html/flutter_html.dart';
 import 'package:proyectofinal_pmsnb/models/ingredients_model.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
@@ -74,12 +75,14 @@ class _detailsRecipeState extends State<detailsRecipe> {
                           height: 20,
                         ),
                         Container(
-                          child: Text(widget.recipeModel.summary.toString()),
-                          //child: Html(data: '<div>'+ widget.recipeModel.summary.toString()+'</div>', style: {'div':Style(fontSize: FontSize(16))},),
+                          child: Html(data: '<div>'+ widget.recipeModel.summary.toString()+'</div>', style: {'div':Style(fontSize: FontSize(16))},),
                         ),
                         SizedBox(
                           height: 30,
                         ),
+                        Container(
+                          
+                        )
                       ],
                     )),
                 Container(
@@ -93,7 +96,7 @@ class _detailsRecipeState extends State<detailsRecipe> {
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
                           Column(
                             children: [
@@ -111,13 +114,14 @@ class _detailsRecipeState extends State<detailsRecipe> {
                                         snapshot) {
                                   if (snapshot.hasData) {
                                     return SizedBox(
-                                      height: 300,
+                                      height: 350,
                                       child: ListView.builder(
                                         scrollDirection: Axis.vertical,
                                         itemCount: snapshot.data!.length,
                                         itemBuilder: (context, index) {
-                                          return Text(snapshot.data![index].name
-                                              .toString());
+                                          var i = 1;
+                                          return Text("° "+snapshot.data![index].name
+                                              .toString(), style: TextStyle(fontSize: 25),);
                                         },
                                       ),
                                     );

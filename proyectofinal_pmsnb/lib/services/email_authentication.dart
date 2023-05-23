@@ -39,6 +39,14 @@ class EmailAuth {
     return false;
   }
 
+  Future<bool> sendResetPasswordLink({required String email}) async {
+    try {
+      final userCredential = await emailAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } on FirebaseException {} catch (e) {}
+    return false;
+  }
+
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
       if (kIsWeb) {
@@ -111,9 +119,10 @@ class EmailAuth {
     } catch (e) {}
   }
 
-  Future<void> signOut(BuildContext context) async {
+  Future<void> signOut() async {
     try {
       await emailAuth.signOut();
+      //await FirebaseAuth.instance.setPersistence(Persistence.NONE);
     } on FirebaseAuthException {
     } catch (e) {}
   }

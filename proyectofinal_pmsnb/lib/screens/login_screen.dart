@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
@@ -9,6 +11,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../widgets/responsive.dart';
 
 EmailAuth emailAuth = EmailAuth();
+TextEditingController conEmail = TextEditingController();
+TextEditingController conPass = TextEditingController();
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   late StreamSubscription _subs;
   bool loader = false;
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -84,11 +89,20 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final txtEmail = TextFormField(
+      controller: conEmail,
       decoration: const InputDecoration(
           label: Text('Email User'), enabledBorder: OutlineInputBorder()),
+      validator: (value) {
+          if (value != null && !EmailValidator.validate(value)) {
+            return 'Ingresa un correo valido';
+          } else {
+            return null;
+          }
+        }
     );
 
     final txtPass = TextFormField(
+      controller: conPass,
       obscureText: true,
       decoration: const InputDecoration(
           label: Text('Password User'), enabledBorder: OutlineInputBorder()),
@@ -98,7 +112,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final btnLogin = SocialLoginButton(
         buttonType: SocialLoginButtonType.generalLogin,
-        onPressed: () {
+        onPressed: () async {
+          if (formKey.currentState!.validate()) {
+            try{
+              await emailAuth.singInWithEmailAndPassword(email: conEmail.text, password: conPass.text);
+              Navigator.pushNamed(context, '/dash');
+            } on FirebaseAuthException catch (e) {
+              ErrorSummary(e.code);
+            }
+            
+          }
           isLoading = true;
           setState(() {});
           Future.delayed(Duration(milliseconds: 3000)).then((value) {
@@ -141,110 +164,123 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     final btnForgot = TextButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, '/pwd');
+      },
       child: const Text(
-        "Olvidaste la constraseña?",
+        "¿Olvidaste la constraseña?",
         style: TextStyle(color: Color.fromARGB(255, 126, 173, 255)),
       ),
     );
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            child: responsive(
-              mobile: MobileLoginScreen(
-                  spaceHorizontal: spaceHorizontal,
-                  btnRegister: txtRegister,
-                  txtEmail: txtEmail,
-                  txtPass: txtPass,
-                  btnLogin: btnLogin,
-                  btnGoogle: btnGoogle,
-                  btnFacebook: btnFacebook,
-                  btngithub: btngithub),
-              desktop: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+      body: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: formKey,
+            child: Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: responsive(
+                    mobile: MobileLoginScreen(
+                        spaceHorizontal: spaceHorizontal,
+                        btnRegister: txtRegister,
+                        txtEmail: txtEmail,
+                        txtPass: txtPass,
+                        btnLogin: btnLogin,
+                        btnGoogle: btnGoogle,
+                        btnFacebook: btnFacebook,
+                        btngithub: btngithub,
+                        btnForgot: btnForgot,),
+                    desktop: Row(
                       children: [
-                        const SizedBox(
-                          width: 450,
-                          child: Center(child: TopLoginImage()),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                width: 450,
+                                child: Center(child: TopLoginImage()),
+                              ),
+                              SizedBox(
+                                  child: LoginScreenTopWidget(
+                                spaceHorizontal: spaceHorizontal,
+                                btnRegister: txtRegister,
+                              ))
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                            child: LoginScreenTopWidget(
-                          spaceHorizontal: spaceHorizontal,
-                          btnRegister: txtRegister,
-                        ))
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 450,
+                                child: LoginForm(
+                                  txtEmail: txtEmail,
+                                  spaceHorizontal: spaceHorizontal,
+                                  txtPass: txtPass,
+                                  btnLogin: btnLogin,
+                                  btnGoogle: btnGoogle,
+                                  btnFacebook: btnFacebook,
+                                  btngithub: btngithub,
+                                  btnForgot: btnForgot,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    tablet: Row(
                       children: [
-                        SizedBox(
-                          width: 450,
-                          child: LoginForm(
-                            txtEmail: txtEmail,
-                            spaceHorizontal: spaceHorizontal,
-                            txtPass: txtPass,
-                            btnLogin: btnLogin,
-                            btnGoogle: btnGoogle,
-                            btnFacebook: btnFacebook,
-                            btngithub: btngithub,
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                width: 450,
+                                child: Center(child: TopLoginImage()),
+                              ),
+                              SizedBox(
+                                  child: LoginScreenTopWidget(
+                                spaceHorizontal: spaceHorizontal,
+                                btnRegister: txtRegister,
+                              ))
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 450,
+                                child: LoginForm(
+                                  txtEmail: txtEmail,
+                                  spaceHorizontal: spaceHorizontal,
+                                  txtPass: txtPass,
+                                  btnLogin: btnLogin,
+                                  btnGoogle: btnGoogle,
+                                  btnFacebook: btnFacebook,
+                                  btngithub: btngithub,
+                                  btnForgot: btnForgot,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-              tablet: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 450,
-                          child: Center(child: TopLoginImage()),
-                        ),
-                        SizedBox(
-                            child: LoginScreenTopWidget(
-                          spaceHorizontal: spaceHorizontal,
-                          btnRegister: txtRegister,
-                        ))
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 450,
-                          child: LoginForm(
-                            txtEmail: txtEmail,
-                            spaceHorizontal: spaceHorizontal,
-                            txtPass: txtPass,
-                            btnLogin: btnLogin,
-                            btnGoogle: btnGoogle,
-                            btnFacebook: btnFacebook,
-                            btngithub: btngithub,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -261,6 +297,7 @@ class MobileLoginScreen extends StatelessWidget {
     required this.btnFacebook,
     required this.btngithub,
     required this.btnRegister,
+    required this.btnForgot,
   });
 
   final SizedBox spaceHorizontal;
@@ -271,6 +308,7 @@ class MobileLoginScreen extends StatelessWidget {
   final SocialLoginButton btnFacebook;
   final SocialLoginButton btngithub;
   final Padding btnRegister;
+  final TextButton btnForgot;
 
   @override
   Widget build(BuildContext context) {
@@ -291,6 +329,7 @@ class MobileLoginScreen extends StatelessWidget {
               btnGoogle: btnGoogle,
               btnFacebook: btnFacebook,
               btngithub: btngithub,
+              btnForgot: btnForgot
             ),
           ]),
         ],
@@ -308,7 +347,8 @@ class LoginForm extends StatelessWidget {
     required this.btnLogin,
     required this.btnGoogle,
     required this.btnFacebook,
-    required this.btngithub,
+    required this.btngithub, 
+    required this.btnForgot,
   });
 
   final TextFormField txtEmail;
@@ -318,6 +358,7 @@ class LoginForm extends StatelessWidget {
   final SocialLoginButton btnGoogle;
   final SocialLoginButton btnFacebook;
   final SocialLoginButton btngithub;
+  final TextButton btnForgot;
 
   @override
   Widget build(BuildContext context) {
@@ -338,12 +379,13 @@ class LoginForm extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        spaceHorizontal,
         btnGoogle,
         spaceHorizontal,
         btnFacebook,
         spaceHorizontal,
-        btngithub
+        btngithub,
+        spaceHorizontal,
+        btnForgot
       ],
     );
   }

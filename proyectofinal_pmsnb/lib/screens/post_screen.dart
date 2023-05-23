@@ -16,7 +16,7 @@ class _PostScreenState extends State<PostScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.restaurant_menu),
             SizedBox(
@@ -97,7 +97,7 @@ class _PostScreenState extends State<PostScreen> {
                 height: 50,
                 color: const Color.fromARGB(255, 59, 160, 255),
                 textColor: Colors.black,
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
