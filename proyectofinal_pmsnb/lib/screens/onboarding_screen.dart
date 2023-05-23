@@ -65,7 +65,7 @@ class _onBoardingScreenState extends State<onBoardingScreen> {
                             height: 50,
                             color: const Color.fromARGB(255, 59, 160, 255),
                             textColor: Colors.black,
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(

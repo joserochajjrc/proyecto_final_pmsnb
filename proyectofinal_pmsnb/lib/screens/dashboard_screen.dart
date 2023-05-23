@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
 import 'package:proyectofinal_pmsnb/network/api_spoonacular.dart';
 import 'package:proyectofinal_pmsnb/screens/details_recipe.dart';
-import 'package:proyectofinal_pmsnb/screens/post_screen.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
 
 import '../provider/theme_provider.dart';
@@ -22,7 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   //late List<Recipe> _recipes;
-  bool _isLoading = true;
+  //bool _isLoading = true;
 
   ApiSpoonacular? apiSpoonacular;
 
@@ -115,9 +114,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             FutureBuilder(
               future: apiSpoonacular!.getAllRecipes(),
               builder: (context, AsyncSnapshot<List<RecipeModel>?> snapshot) {
-                return InkWell(
-                  onTap: () {},
-                  child: GridView.builder(
+                if (snapshot.data != null) {
+                  return InkWell(
+                    onTap: () {},
+                    child: GridView.builder(
+                      itemCount: snapshot.data!.length,
                       padding: const EdgeInsets.all(10),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -149,8 +150,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         } else {
                           return const CircularProgressIndicator();
                         }
-                      }),
-                );
+                      },
+                    ),
+                  );
+                } else {
+                  return Container();
+                }
               },
             ),
 
