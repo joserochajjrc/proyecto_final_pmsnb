@@ -4,6 +4,7 @@ import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
 import 'package:proyectofinal_pmsnb/network/api_spoonacular.dart';
 import 'package:proyectofinal_pmsnb/screens/details_recipe.dart';
 import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
+import 'package:proyectofinal_pmsnb/screens/list_post_cloud_screen.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
 
 import '../provider/theme_provider.dart';
@@ -163,9 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
 
             //ListPostCloudScreen(),
-            Center(
-              child: Text('aqui va la bd de firebase'),
-            ),
+            ListPostCloudScreen(),
           ],
         ),
         drawer: Drawer(
@@ -178,18 +177,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   accountName: Text('José Juan Rocha Cisneros'),
                   accountEmail: Text('19031005@itcelaya.edu.mx')),
-                  ListTile(
-                    onTap: () {
-                      emailAuth.signOut();
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    horizontalTitleGap: 0.0,
-                    leading: const Icon(Icons.add_to_home_screen),
-                    title: const Text(
-                      'Cerrar Sesión',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    trailing: const Icon(Icons.chevron_right),
+              ListTile(
+                onTap: () {
+                  emailAuth.signOut();
+                  Navigator.pushNamed(context, '/login');
+                },
+                horizontalTitleGap: 0.0,
+                leading: const Icon(Icons.add_to_home_screen),
+                title: const Text(
+                  'Cerrar Sesión',
+                  style: TextStyle(fontSize: 16),
+                ),
+                trailing: const Icon(Icons.chevron_right),
               ),
               DropdownButtonFormField<String>(
                   isExpanded: true,

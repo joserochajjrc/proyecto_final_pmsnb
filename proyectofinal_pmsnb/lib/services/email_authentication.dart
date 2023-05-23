@@ -28,6 +28,17 @@ class EmailAuth {
     return false;
   }
 
+  Future<String> getUserToken() async {
+    String token = '';
+    try {
+      User? user = emailAuth.currentUser;
+      if (user != null) {
+        token = await user.getIdToken();
+      }
+    } catch (e) {}
+    return token;
+  }
+
   Future<bool> singInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
