@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
+import 'package:proyectofinal_pmsnb/models/user_model.dart';
 import 'package:proyectofinal_pmsnb/network/api_spoonacular.dart';
 import 'package:proyectofinal_pmsnb/screens/details_recipe.dart';
+import 'package:proyectofinal_pmsnb/screens/post_screen.dart';
 import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
 import 'package:proyectofinal_pmsnb/screens/list_post_cloud_screen.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
@@ -46,6 +50,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
+    final user = FirebaseAuth.instance.currentUser!;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -170,13 +176,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
         drawer: Drawer(
           child: ListView(
             children: [
-              const UserAccountsDrawerHeader(
-                  currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://raw.githubusercontent.com/obliviate-dan/Login-Form/master/img/avatar.png'),
-                  ),
-                  accountName: Text('José Juan Rocha Cisneros'),
-                  accountEmail: Text('19031005@itcelaya.edu.mx')),
+              UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: user.photoURL != null
+                      ? NetworkImage(user.photoURL!)
+                      : const NetworkImage(
+                          'https://raw.githubusercontent.com/obliviate-dan/Login-Form/master/img/avatar.png'),
+                ),
+                accountName: user.displayName != null
+                    ? Text(user.displayName!)
+                    : Container(),
+                accountEmail:
+                    user.email != null ? Text(user.email!) : Container(),
+              ),
               ListTile(
                 onTap: () {
                   emailAuth.signOut();
@@ -229,10 +241,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               );
                             },
                          )*/
-
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.pushNamed(context, '/post');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: ((context) => PostScreen(
+                      token: '',
+                    )),
+              ),
+            );
           },
           label: const Text('Publicar'),
           icon: const Icon(Icons.food_bank),

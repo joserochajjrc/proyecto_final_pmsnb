@@ -18,7 +18,7 @@ class _DetailPost extends State<DetailPost> {
     final carbohidratos = int.parse(widget.postModel.carbohidratos!);
     final grasas = int.parse(widget.postModel.grasas!);
     final proteinas = int.parse(widget.postModel.proteina!);
-    final total = calorias + carbohidratos + grasas + proteinas;
+    final total = calorias + carbohidratos + grasas + proteinas + 0.01;
 
     final pCalorias = calorias / total;
     final pCarbohidratos = carbohidratos / total;

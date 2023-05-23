@@ -1,22 +1,31 @@
-class UserModel{
-  String? idUser;
-  String? imageUser;
-  String? nameUser;
-  String? emailUser;
-  String? proveedorUser;
+class UserModel {
+  final String uid;
+  final String name;
+  final String platform;
+  final String token;
+  final String createdAt;
 
-  UserModel({this.idUser,this.imageUser,this.nameUser,this.emailUser,this.proveedorUser});
-  
+  const UserModel({
+    required this.createdAt,
+    required this.name,
+    required this.platform,
+    required this.token,
+    required this.uid,
+  });
 
-  factory UserModel.fromJSON(Map<String, dynamic> mapUser) {
-    return UserModel(
-      idUser: mapUser['idUser'],
-      imageUser: mapUser['imageUser']??"../assets/avatar.png",
-      nameUser: mapUser['nameUser']??"",
-      emailUser: mapUser['emailUser']??"",
-      proveedorUser: mapUser['prooveedorUser']??""
-    );
-  }
-  
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        uid: json['uid'],
+        createdAt: json['createdAt'],
+        platform: json['platform'],
+        token: json['token'],
+        name: json['name'],
+      );
 
+  Map<String, dynamic> toJson() => {
+        'uid': uid,
+        'token': token,
+        'name': name,
+        'platform': platform,
+        'createdAt': createdAt,
+      };
 }

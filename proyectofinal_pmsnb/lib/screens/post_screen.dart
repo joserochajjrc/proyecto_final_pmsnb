@@ -4,12 +4,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:proyectofinal_pmsnb/screens/login_screen.dart';
+import 'package:proyectofinal_pmsnb/services/firebase_helper.dart';
 
 import '../models/post_model.dart';
 import '../services/post_collection_fb.dart';
 
 class PostScreen extends StatefulWidget {
-  const PostScreen({super.key});
+  final String token;
+  const PostScreen({
+    Key? key,
+    required this.token,
+  }) : super(key: key);
 
   @override
   State<PostScreen> createState() => _PostScreenState();
@@ -54,6 +59,7 @@ class _PostScreenState extends State<PostScreen> {
       urlDownload = await snapshot.ref.getDownloadURL();
       print('download link: ${urlDownload}');
     }
+
     final user = await emailAuth.getUserToken();
     postCollection.insert(
       PostModel(
@@ -66,6 +72,13 @@ class _PostScreenState extends State<PostScreen> {
           proteina: _proController.text,
           tiempo: _timeController.text,
           usuario: user),
+    );
+
+    FirebaseHelper.sendNotification(
+      title: 'Nueva receta',
+      body: _nameController.text,
+      token: widget.token,
+      image: urlDownload,
     );
   }
 
