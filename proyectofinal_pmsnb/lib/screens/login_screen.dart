@@ -89,17 +89,16 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final txtEmail = TextFormField(
-      controller: conEmail,
-      decoration: const InputDecoration(
-          label: Text('Email User'), enabledBorder: OutlineInputBorder()),
-      validator: (value) {
+        controller: conEmail,
+        decoration: const InputDecoration(
+            label: Text('Email User'), enabledBorder: OutlineInputBorder()),
+        validator: (value) {
           if (value != null && !EmailValidator.validate(value)) {
             return 'Ingresa un correo valido';
           } else {
             return null;
           }
-        }
-    );
+        });
 
     final txtPass = TextFormField(
       controller: conPass,
@@ -114,13 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
         buttonType: SocialLoginButtonType.generalLogin,
         onPressed: () async {
           if (formKey.currentState!.validate()) {
-            try{
-              await emailAuth.singInWithEmailAndPassword(email: conEmail.text, password: conPass.text);
+            try {
+              await emailAuth.singInWithEmailAndPassword(
+                  email: conEmail.text, password: conPass.text);
               Navigator.pushNamed(context, '/dash');
             } on FirebaseAuthException catch (e) {
               ErrorSummary(e.code);
             }
-            
           }
           isLoading = true;
           setState(() {});
@@ -133,8 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final btnGoogle = SocialLoginButton(
         buttonType: SocialLoginButtonType.google,
-        onPressed: () {
-          emailAuth.signInWithGoogle(context);
+        onPressed: () async {
+          await emailAuth.signInWithGoogle(context);
           isLoading = true;
           setState(() {});
           Future.delayed(const Duration(milliseconds: 3000)).then((value) {
@@ -186,15 +185,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: MediaQuery.of(context).size.height,
                   child: responsive(
                     mobile: MobileLoginScreen(
-                        spaceHorizontal: spaceHorizontal,
-                        btnRegister: txtRegister,
-                        txtEmail: txtEmail,
-                        txtPass: txtPass,
-                        btnLogin: btnLogin,
-                        btnGoogle: btnGoogle,
-                        btnFacebook: btnFacebook,
-                        btngithub: btngithub,
-                        btnForgot: btnForgot,),
+                      spaceHorizontal: spaceHorizontal,
+                      btnRegister: txtRegister,
+                      txtEmail: txtEmail,
+                      txtPass: txtPass,
+                      btnLogin: btnLogin,
+                      btnGoogle: btnGoogle,
+                      btnFacebook: btnFacebook,
+                      btngithub: btngithub,
+                      btnForgot: btnForgot,
+                    ),
                     desktop: Row(
                       children: [
                         Expanded(
@@ -322,15 +322,14 @@ class MobileLoginScreen extends StatelessWidget {
             LoginScreenTopWidget(
                 spaceHorizontal: spaceHorizontal, btnRegister: btnRegister),
             LoginForm(
-              txtEmail: txtEmail,
-              spaceHorizontal: spaceHorizontal,
-              txtPass: txtPass,
-              btnLogin: btnLogin,
-              btnGoogle: btnGoogle,
-              btnFacebook: btnFacebook,
-              btngithub: btngithub,
-              btnForgot: btnForgot
-            ),
+                txtEmail: txtEmail,
+                spaceHorizontal: spaceHorizontal,
+                txtPass: txtPass,
+                btnLogin: btnLogin,
+                btnGoogle: btnGoogle,
+                btnFacebook: btnFacebook,
+                btngithub: btngithub,
+                btnForgot: btnForgot),
           ]),
         ],
       ),
@@ -347,7 +346,7 @@ class LoginForm extends StatelessWidget {
     required this.btnLogin,
     required this.btnGoogle,
     required this.btnFacebook,
-    required this.btngithub, 
+    required this.btngithub,
     required this.btnForgot,
   });
 

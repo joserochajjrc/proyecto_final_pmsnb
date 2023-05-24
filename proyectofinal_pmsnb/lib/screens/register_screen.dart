@@ -54,6 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final txtEmail = TextFormField(
         controller: conEmail,
+        keyboardType: TextInputType.emailAddress,
         decoration: const InputDecoration(
             label: Text('Email User'), enabledBorder: OutlineInputBorder()),
         validator: (value) {
@@ -87,7 +88,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final btnRregister = ElevatedButton(
       onPressed: () {
         if (formKey.currentState!.validate()) {
-          emailAuth.createUserWithEmailAndPassword(email: conEmail.text, password: conPass.text);
+          emailAuth.createUserWithEmailAndPassword(
+              email: conEmail.text, password: conPass.text);
           Navigator.pushNamed(context, '/login');
         }
       },
