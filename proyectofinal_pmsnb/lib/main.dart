@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/provider/theme_provider.dart';
@@ -11,7 +12,8 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   final theme = sharedPreferences.getString('theme') ?? 'light';
-  await FirebaseHelper.setupFirebase();
+  await Firebase.initializeApp();
+  //await FirebaseHelper.setupFirebase();
   await NotificationService.initializeNotification();
 
   //await Firebase.initializeApp();

@@ -86,9 +86,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     final btnRregister = ElevatedButton(
-      onPressed: () {
+      onPressed: () async {
         if (formKey.currentState!.validate()) {
-          emailAuth.createUserWithEmailAndPassword(
+          await emailAuth.createUserWithEmailAndPassword(
               email: conEmail.text, password: conPass.text);
           Navigator.pushNamed(context, '/login');
         }
