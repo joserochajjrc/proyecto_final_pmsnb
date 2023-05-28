@@ -90,17 +90,16 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final txtEmail = TextFormField(
-      controller: conEmail,
-      decoration: const InputDecoration(
-          label: Text('Email User'), enabledBorder: OutlineInputBorder()),
-      validator: (value) {
+        controller: conEmail,
+        decoration: const InputDecoration(
+            label: Text('Email User'), enabledBorder: OutlineInputBorder()),
+        validator: (value) {
           if (value != null && !EmailValidator.validate(value)) {
             return 'Ingresa un correo valido';
           } else {
             return null;
           }
-        }
-    );
+        });
 
     final txtPass = TextFormField(
       controller: conPass,
@@ -115,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
         buttonType: SocialLoginButtonType.generalLogin,
         onPressed: () async {
           if (formKey.currentState!.validate()) {
+<<<<<<< HEAD
             final emaiT = conEmail.text;
             final passT = conPass.text;
             if("".compareTo(conEmail.text)==0||"".compareTo(conPass.text)==0){
@@ -153,6 +153,14 @@ class _LoginScreenState extends State<LoginScreen> {
               } on FirebaseAuthException catch(e){
                 ErrorSummary(e.code);
               }              
+=======
+            try {
+              await emailAuth.singInWithEmailAndPassword(
+                  email: conEmail.text, password: conPass.text);
+              Navigator.pushNamed(context, '/dash');
+            } on FirebaseAuthException catch (e) {
+              ErrorSummary(e.code);
+>>>>>>> 5afe041aaf54df1ef930c3d1d7e9b9372e257552
             }
           }
               /*try{
@@ -227,15 +235,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: MediaQuery.of(context).size.height,
                   child: responsive(
                     mobile: MobileLoginScreen(
-                        spaceHorizontal: spaceHorizontal,
-                        btnRegister: txtRegister,
-                        txtEmail: txtEmail,
-                        txtPass: txtPass,
-                        btnLogin: btnLogin,
-                        btnGoogle: btnGoogle,
-                        btnFacebook: btnFacebook,
-                        btngithub: btngithub,
-                        btnForgot: btnForgot,),
+                      spaceHorizontal: spaceHorizontal,
+                      btnRegister: txtRegister,
+                      txtEmail: txtEmail,
+                      txtPass: txtPass,
+                      btnLogin: btnLogin,
+                      btnGoogle: btnGoogle,
+                      btnFacebook: btnFacebook,
+                      btngithub: btngithub,
+                      btnForgot: btnForgot,
+                    ),
                     desktop: Row(
                       children: [
                         Expanded(
@@ -363,15 +372,14 @@ class MobileLoginScreen extends StatelessWidget {
             LoginScreenTopWidget(
                 spaceHorizontal: spaceHorizontal, btnRegister: btnRegister),
             LoginForm(
-              txtEmail: txtEmail,
-              spaceHorizontal: spaceHorizontal,
-              txtPass: txtPass,
-              btnLogin: btnLogin,
-              btnGoogle: btnGoogle,
-              btnFacebook: btnFacebook,
-              btngithub: btngithub,
-              btnForgot: btnForgot
-            ),
+                txtEmail: txtEmail,
+                spaceHorizontal: spaceHorizontal,
+                txtPass: txtPass,
+                btnLogin: btnLogin,
+                btnGoogle: btnGoogle,
+                btnFacebook: btnFacebook,
+                btngithub: btngithub,
+                btnForgot: btnForgot),
           ]),
         ],
       ),
@@ -388,7 +396,7 @@ class LoginForm extends StatelessWidget {
     required this.btnLogin,
     required this.btnGoogle,
     required this.btnFacebook,
-    required this.btngithub, 
+    required this.btngithub,
     required this.btnForgot,
   });
 

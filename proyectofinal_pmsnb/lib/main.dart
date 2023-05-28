@@ -12,7 +12,8 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   final theme = sharedPreferences.getString('theme') ?? 'light';
-  await FirebaseHelper.setupFirebase();
+  await Firebase.initializeApp();
+  //await FirebaseHelper.setupFirebase();
   await NotificationService.initializeNotification();
 
   await Firebase.initializeApp();
