@@ -190,7 +190,7 @@ final List<OnBoard> data = [
   OnBoard(
       image: 'assets/boarding3.png',
       title: 'Recetas saludables',
-      description: 'Busca en nuetro repertorio de recetas lo que te interece.'),
+      description: 'Busca en nuestro repertorio de recetas lo que te interece.'),
   OnBoard(
       image: 'assets/boarding2.png',
       title: 'Comparte!',

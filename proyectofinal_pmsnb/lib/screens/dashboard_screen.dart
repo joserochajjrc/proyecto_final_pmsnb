@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/models/recipe_model.dart';
 import 'package:proyectofinal_pmsnb/models/user_model.dart';
@@ -31,6 +35,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   ApiSpoonacular? apiSpoonacular;
 
+  EmailAuth emailAuth = EmailAuth();
+
+   File? _image;
+
+  Future getImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+
+      setState(() {
+        this._image = imageTemporary;
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,8 +67,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _isLoading = false;
     });
   }*/
-
-  EmailAuth emailAuth = EmailAuth();
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +197,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         drawer: Drawer(
           child: ListView(
             children: [
+                GestureDetector(
+                  onTap: () {
+                    getImage(ImageSource.gallery);
+                  },
+                ),
               UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
                   backgroundImage: user.photoURL != null

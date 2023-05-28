@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyectofinal_pmsnb/models/user_model.dart';
 import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 import 'package:uni_links/uni_links.dart';
@@ -114,27 +115,67 @@ class _LoginScreenState extends State<LoginScreen> {
         buttonType: SocialLoginButtonType.generalLogin,
         onPressed: () async {
           if (formKey.currentState!.validate()) {
-            try{
-              await emailAuth.singInWithEmailAndPassword(email: conEmail.text, password: conPass.text);
-              Navigator.pushNamed(context, '/dash');
-            } on FirebaseAuthException catch (e) {
-              ErrorSummary(e.code);
+            final emaiT = conEmail.text;
+            final passT = conPass.text;
+            if("".compareTo(conEmail.text)==0||"".compareTo(conPass.text)==0){
+                            
+                            
+            } else {
+              try{
+                //FacebookAuth.instance.logOut();
+                FirebaseAuth.instance.signOut();
+                var ban = await FirebaseAuth.instance.signInWithEmailAndPassword(email: emaiT, password: passT);
+                if (ban.user!.uid != null){
+                  if(FirebaseAuth.instance.currentUser!.emailVerified!=null){
+                    Navigator.pushNamed(context, '/dash');
+                  } else {
+                    AlertDialog(
+                      title: Text('ERROOR!!'),
+                      content: Text('El correo no es valido'),
+                      actions: <Widget>[
+                        TextButton( child: Text('Aceptar'),onPressed: () {
+                          Navigator.pop(context);
+                        },)
+                      ],
+                    );
+                  }
+                } else {
+                  AlertDialog(
+                    title: Text('ERROOR!!'),
+                    content: Text('Credenciales no validas'),
+                    actions: <Widget>[
+                      TextButton( child: Text('Aceptar'),onPressed: () {
+                        Navigator.pop(context);
+                      },)
+                    ],
+                  );
+                }
+              } on FirebaseAuthException catch(e){
+                ErrorSummary(e.code);
+              }              
             }
-            
           }
-          isLoading = true;
+              /*try{
+                await emailAuth.singInWithEmailAndPassword(email: conEmail.text, password: conPass.text);
+                Navigator.pushNamed(context, '/dash');
+              } on FirebaseAuthException catch (e) {
+                ErrorSummary(e.code);
+              }*/
+            
+        }
+          /*isLoading = true;
           setState(() {});
           Future.delayed(Duration(milliseconds: 3000)).then((value) {
             isLoading = false;
             setState(() {});
             Navigator.pushNamed(context, '/dash');
-          });
-        });
+          });*/
+    );
 
     final btnGoogle = SocialLoginButton(
         buttonType: SocialLoginButtonType.google,
-        onPressed: () {
-          emailAuth.signInWithGoogle(context);
+        onPressed: () async {
+          await emailAuth.signInWithGoogle(context);
           isLoading = true;
           setState(() {});
           Future.delayed(const Duration(milliseconds: 3000)).then((value) {

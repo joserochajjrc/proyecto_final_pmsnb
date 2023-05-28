@@ -137,4 +137,13 @@ class EmailAuth {
     } on FirebaseAuthException {
     } catch (e) {}
   }
+
+  getCurrentUser(String email, String pwd) async {
+    final user = await emailAuth.currentUser;
+    final uid = user?.uid;
+    // Similarly we can get email as well
+    //final uemail = user.email;
+    print(uid);
+    //print(uemail);
+  }
 }

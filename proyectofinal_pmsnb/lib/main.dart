@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/provider/theme_provider.dart';
@@ -14,7 +15,7 @@ Future main() async {
   await FirebaseHelper.setupFirebase();
   await NotificationService.initializeNotification();
 
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(proyectoFinal(theme: theme));
 }
 
