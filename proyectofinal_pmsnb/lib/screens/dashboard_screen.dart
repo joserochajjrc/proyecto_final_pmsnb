@@ -37,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   EmailAuth emailAuth = EmailAuth();
 
-   File? _image;
+  File? _image;
 
   Future getImage(ImageSource source) async {
     try {
@@ -197,11 +197,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         drawer: Drawer(
           child: ListView(
             children: [
-                GestureDetector(
-                  onTap: () {
-                    getImage(ImageSource.gallery);
-                  },
-                ),
+              GestureDetector(
+                onTap: () {
+                  getImage(ImageSource.gallery);
+                },
+              ),
               UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
                   backgroundImage: user.photoURL != null

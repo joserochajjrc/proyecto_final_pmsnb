@@ -4,9 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal_pmsnb/provider/theme_provider.dart';
 import 'package:proyectofinal_pmsnb/routes.dart';
 import 'package:proyectofinal_pmsnb/screens/onBoarding_screen.dart';
-import 'package:proyectofinal_pmsnb/services/firebase_helper.dart';
 import 'package:proyectofinal_pmsnb/services/notification_service.dart';
+import 'package:proyectofinal_pmsnb/services/push_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +16,8 @@ Future main() async {
   await Firebase.initializeApp();
   //await FirebaseHelper.setupFirebase();
   await NotificationService.initializeNotification();
-
   await Firebase.initializeApp();
+  await NotificacionesService().initializeApp();
   runApp(proyectoFinal(theme: theme));
 }
 
