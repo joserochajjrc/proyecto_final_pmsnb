@@ -214,6 +214,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     : Container(),
                 accountEmail:
                     user.email != null ? Text(user.email!) : Container(),
+                onDetailsPressed: () {
+                  Navigator.pushNamed(context, '/user');
+                },
               ),
               ListTile(
                 onTap: () async {
