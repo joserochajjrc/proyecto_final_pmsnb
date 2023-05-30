@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -122,40 +121,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 FirebaseAuth.instance.signOut();
                 var ban = await FirebaseAuth.instance
                     .signInWithEmailAndPassword(email: emaiT, password: passT);
-                if (ban.user!.uid != null) {
-                  if (FirebaseAuth.instance.currentUser!.emailVerified !=
-                      null) {
-                    Navigator.pushNamed(context, '/dash');
-                  } else {
-                    AlertDialog(
-                      title: Text('ERROOR!!'),
-                      content: Text('El correo no es valido'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('Aceptar'),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    );
-                  }
+                if (ban.user?.emailVerified ?? false) {
+                  Navigator.pushNamed(context, '/dash');
                 } else {
-                  AlertDialog(
-                    title: Text('ERROOR!!'),
-                    content: Text('Credenciales no validas'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('Aceptar'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error: Verifica tu correo'),
+                      backgroundColor: Colors.red,
+                    ),
                   );
                 }
               } on FirebaseAuthException catch (e) {
-                ErrorSummary(e.code);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error: Datos no validos'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
               }
             }
           }
