@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:group_button/group_button.dart';
 import 'package:proyectofinal_pmsnb/screens/login_screen.dart';
 import 'package:proyectofinal_pmsnb/services/firebase_helper.dart';
 
@@ -28,6 +30,8 @@ class _PostScreenState extends State<PostScreen> {
   final _nameController = TextEditingController();
   final _proController = TextEditingController();
   final _timeController = TextEditingController();
+  final _groupButtonController = GroupButtonController();
+  var _category = "";
 
   final _formKey = GlobalKey<FormState>();
   PlatformFile? pickedFile;
@@ -71,14 +75,8 @@ class _PostScreenState extends State<PostScreen> {
           nombre: _nameController.text,
           proteina: _proController.text,
           tiempo: _timeController.text,
-          usuario: user),
-    );
-
-    FirebaseHelper.sendNotification(
-      title: 'Nueva receta',
-      body: _nameController.text,
-      token: widget.token,
-      image: urlDownload,
+          usuario: user,
+          categoria: _category),
     );
   }
 
@@ -161,6 +159,21 @@ class _PostScreenState extends State<PostScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                GroupButton(
+                  controller: _groupButtonController,
+                  isRadio: false,
+                  onSelected: (texto, index, isSelected) {
+                    _category = texto;
+                  },
+                  buttons: [
+                    "Postre",
+                    "Guisado",
+                    "Crema",
+                    "Ensalada",
+                    "Pan",
+                  ],
+                  maxSelected: 1,
+                ),
                 const Text(
                   'Selecciona una imagen.',
                   style: TextStyle(
@@ -202,9 +215,10 @@ class _PostScreenState extends State<PostScreen> {
                   height: 20,
                 ),
                 MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      uploadFirebase();
+                      await uploadFirebase();
+
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

@@ -62,9 +62,12 @@ class _DetailPost extends State<DetailPost> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text(widget.postModel.tiempo.toString()),
+                        Text(
+                          widget.postModel.categoria.toString(),
+                        ),
                       ],
                     ),
+                    Text(widget.postModel.tiempo.toString()),
                     const SizedBox(
                       height: 20,
                     ),

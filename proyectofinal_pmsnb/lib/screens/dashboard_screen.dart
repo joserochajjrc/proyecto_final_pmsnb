@@ -190,19 +190,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 }
               },
             ),
-
-            //ListPostCloudScreen(),
             ListPostCloudScreen(),
           ],
         ),
         drawer: Drawer(
           child: ListView(
             children: [
-              GestureDetector(
+              //este bloque da error (creo ocupa un sizeBox)
+              /*GestureDetector(
                 onTap: () {
                   getImage(ImageSource.gallery);
                 },
-              ),
+              ),*/
               UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
                   backgroundImage: user.photoURL != null
@@ -217,14 +216,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     user.email != null ? Text(user.email!) : Container(),
               ),
               ListTile(
-                onTap: () {
-                  emailAuth.signOut();
+                onTap: () async {
+                  await emailAuth.signOut();
                   Navigator.pushNamed(context, '/login');
                 },
                 horizontalTitleGap: 0.0,
                 leading: const Icon(Icons.add_to_home_screen),
                 title: const Text(
                   'Cerrar Sesión',
+                  style: TextStyle(fontSize: 16),
+                ),
+                trailing: const Icon(Icons.chevron_right),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, '/subs');
+                },
+                horizontalTitleGap: 0.0,
+                leading: const Icon(Icons.star),
+                title: const Text(
+                  'Suscripciones',
                   style: TextStyle(fontSize: 16),
                 ),
                 trailing: const Icon(Icons.chevron_right),

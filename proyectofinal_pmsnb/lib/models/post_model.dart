@@ -8,6 +8,7 @@ class PostModel {
   String? tiempo;
   String? imagen;
   String? usuario;
+  String? categoria;
 
   PostModel(
       {this.nombre,
@@ -18,7 +19,8 @@ class PostModel {
       this.proteina,
       this.tiempo,
       this.imagen,
-      this.usuario});
+      this.usuario,
+      this.categoria});
 
   factory PostModel.fromMap(Map<String, dynamic> map) {
     return PostModel(
@@ -31,6 +33,7 @@ class PostModel {
       tiempo: map['tiempo'],
       imagen: map['imagen'],
       usuario: map['usuario'],
+      categoria: map['categoria'],
     );
   }
 }

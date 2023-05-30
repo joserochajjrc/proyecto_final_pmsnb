@@ -41,6 +41,7 @@ class _ListPostCloudScreenState extends State<ListPostCloudScreen> {
                 final grasas = snapshot.data!.docs[index].get('grasas');
                 final proteina = snapshot.data!.docs[index].get('proteina');
                 final usuario = snapshot.data!.docs[index].get('usuario');
+                final categoria = snapshot.data!.docs[index].get('categoria');
 
                 return GestureDetector(
                   onTap: () {
@@ -58,6 +59,7 @@ class _ListPostCloudScreenState extends State<ListPostCloudScreen> {
                             grasas: grasas,
                             proteina: proteina,
                             usuario: usuario,
+                            categoria: categoria,
                           ),
                         ),
                       ),
@@ -76,11 +78,6 @@ class _ListPostCloudScreenState extends State<ListPostCloudScreen> {
                       usuario: usuario,
                     ),
                   ),
-                );
-
-                return ItemPostWidget(
-                  postModel:
-                      PostModel(nombre: nombre, tiempo: tiempo, imagen: imagen),
                 );
               });
         } else if (snapshot.hasError) {

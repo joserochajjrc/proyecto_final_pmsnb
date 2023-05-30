@@ -22,7 +22,8 @@ class PostCollection {
         'imagen': postModel.imagen,
         'proteina': postModel.proteina,
         'usuario': postModel.usuario,
-        'tiempo': postModel.tiempo
+        'tiempo': postModel.tiempo,
+        'categoria': postModel.categoria
       },
     );
   }
