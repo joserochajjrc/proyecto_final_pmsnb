@@ -3,13 +3,10 @@ import 'dart:async';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:proyectofinal_pmsnb/models/user_model.dart';
 import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../services/notification_service.dart';
 import '../widgets/responsive.dart';
 
 EmailAuth emailAuth = EmailAuth();
@@ -162,7 +159,6 @@ class _LoginScreenState extends State<LoginScreen> {
               }
             }
           }
-          await NotificationService.initializeNotification();
 
           /*try{
                 await emailAuth.singInWithEmailAndPassword(email: conEmail.text, password: conPass.text);
@@ -191,7 +187,6 @@ class _LoginScreenState extends State<LoginScreen> {
             setState(() {});
             Navigator.pushNamed(context, '/dash');
           });
-          await NotificationService.initializeNotification();
         });
 
     final btnFacebook = SocialLoginButton(

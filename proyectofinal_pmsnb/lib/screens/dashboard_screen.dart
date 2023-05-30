@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,7 @@ import 'package:proyectofinal_pmsnb/screens/list_post_cloud_screen.dart';
 import 'package:proyectofinal_pmsnb/widgets/item_spoonacular.dart';
 
 import '../provider/theme_provider.dart';
+import '../services/push_notification_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -72,7 +74,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     final user = FirebaseAuth.instance.currentUser!;
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
