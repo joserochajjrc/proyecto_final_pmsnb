@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
+import 'package:proyectofinal_pmsnb/services/post_collection_fb.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -11,6 +16,50 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   EmailAuth emailAuth = EmailAuth();
+  
+
+  PlatformFile? pickedFile;
+  UploadTask? uploadTask;
+ // PostCollection postCollection = PostCollection();
+
+  Future uploadFirebase() async {
+
+    final urlDownload;
+    if (pickedFile == null) {
+      urlDownload = await FirebaseStorage.instance
+          .ref()
+          .child('users/${FirebaseAuth.instance.currentUser!.uid}.png')
+          .getDownloadURL();
+    } else {
+      int cont = 0;
+      final storage = FirebaseStorage.instance;
+      final reference = storage.ref().child('users');
+      final listResult = await reference.listAll();
+      cont = listResult.items.length;
+      final path = 'users/${FirebaseAuth.instance.currentUser!.uid}.jpg';
+
+      final file = File(pickedFile!.path!);
+
+      final ref = FirebaseStorage.instance.ref().child(path);
+      uploadTask = ref.putFile(file);
+
+      final snapshot = await uploadTask!.whenComplete(() {});
+
+      urlDownload = await snapshot.ref.getDownloadURL();
+      print('download link: ${urlDownload}');
+    }
+
+    final user = await emailAuth.getUserToken();
+  }
+
+  Future selectFile() async {
+    final image = await FilePicker.platform.pickFiles();
+    if (image == null) return;
+    setState(() {
+      pickedFile = image.files.first;
+    });
+    uploadFirebase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +76,6 @@ class _UserScreenState extends State<UserScreen> {
         centerTitle: true,
       ),
       body: Container(
-        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -38,17 +86,46 @@ class _UserScreenState extends State<UserScreen> {
             const SizedBox(
               height: 32,
             ),
-            CircleAvatar(
-              radius: 80,
-              backgroundImage: NetworkImage(user.photoURL!),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 120),
+              child: Stack(
+                children: [
+                  pickedFile == null ? 
+                  user.photoURL != null ? CircleAvatar(
+                    radius: 80,
+                    backgroundImage: NetworkImage(user.photoURL!),
+                  ) : CircleAvatar(
+                    radius: 80,
+                    backgroundImage: AssetImage("assets/avatar.png"),
+                  ) : ClipOval(
+                    
+                    child: Image.file(
+                                      File(pickedFile!.path!),
+                                      width: 220,
+                                      height: 220,
+                                      fit: BoxFit.cover,), 
+                  ),
+                  ListTile(
+                    onTap: () {
+                      selectFile();
+                    },
+                    horizontalTitleGap: 0.0,
+                    leading: const Icon(Icons.camera_enhance_outlined),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 32,
             ),
-            Text(
+            
+              const SizedBox(
+              height: 32,
+            ),
+            user.displayName != null ? Text(
               'Nombre: ${user.displayName}',
               style: const TextStyle(fontSize: 18),
-            ),
+            ) : Container(),
             const SizedBox(
               height: 8,
             ),

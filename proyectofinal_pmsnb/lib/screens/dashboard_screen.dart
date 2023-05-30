@@ -196,12 +196,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         drawer: Drawer(
           child: ListView(
             children: [
-              //este bloque da error (creo ocupa un sizeBox)
-              /*GestureDetector(
-                onTap: () {
-                  getImage(ImageSource.gallery);
-                },
-              ),*/
               UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
                   backgroundImage: user.photoURL != null

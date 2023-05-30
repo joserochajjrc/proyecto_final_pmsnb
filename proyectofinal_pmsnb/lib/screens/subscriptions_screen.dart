@@ -19,7 +19,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.star),
             SizedBox(
