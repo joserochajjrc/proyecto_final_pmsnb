@@ -37,7 +37,6 @@ class _PostScreenState extends State<PostScreen> {
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
   PostCollection postCollection = PostCollection();
-
   Future uploadFirebase() async {
     final urlDownload;
     if (pickedFile == null) {

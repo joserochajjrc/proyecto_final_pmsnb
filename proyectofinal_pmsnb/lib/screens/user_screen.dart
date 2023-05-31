@@ -59,22 +59,21 @@ class _UserScreenState extends State<UserScreen> {
       pickedFile = image.files.first;
     });
     await uploadFirebase();
-    getUrlImage();
   }
 
-  getUrlImage() async {
+  Future<String> getUrlImage() async {
+    await Future.delayed(Duration(seconds: 1));
+
     try {
-      urlDownload = await FirebaseStorage.instance
+      return await FirebaseStorage.instance
           .ref()
           .child('users/${FirebaseAuth.instance.currentUser!.uid}.jpg')
           .getDownloadURL();
-      print('prueba:  $urlDownload');
     } catch (e) {
-      urlDownload = await FirebaseStorage.instance
+      return await FirebaseStorage.instance
           .ref()
           .child('users/avatar.png')
           .getDownloadURL();
-      print('prueba:  $urlDownload');
     }
   }
 
@@ -85,8 +84,6 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    getUrlImage();
-
     final user = FirebaseAuth.instance.currentUser!;
     var proveedor = 'assets/logoapp.png';
     for (UserInfo userInfo in user.providerData) {
@@ -119,17 +116,30 @@ class _UserScreenState extends State<UserScreen> {
                           radius: 80,
                           backgroundImage: NetworkImage(user.photoURL!),
                         )
-                      : CircleAvatar(
-                          radius: 80,
-                          backgroundImage: NetworkImage(urlDownload),
-                        ),
-                  ListTile(
-                    onTap: () {
-                      selectFile();
-                    },
-                    horizontalTitleGap: 0.0,
-                    leading: const Icon(Icons.camera_enhance),
-                  ),
+                      : FutureBuilder<String>(
+                          future: getUrlImage(),
+                          builder: ((BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else {
+                              return CircleAvatar(
+                                backgroundImage: NetworkImage(snapshot.data!),
+                                radius: 100,
+                              );
+                            }
+                          })),
+                  user.photoURL == null
+                      ? ListTile(
+                          onTap: () {
+                            selectFile();
+                          },
+                          horizontalTitleGap: 0.0,
+                          leading: const Icon(Icons.camera_enhance),
+                        )
+                      : Container(),
                 ],
               ),
             ),

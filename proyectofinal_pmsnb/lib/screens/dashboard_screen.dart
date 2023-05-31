@@ -73,21 +73,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }*/
 
-  getUrlImage() async {
+  Future<String> getUrlImage() async {
+    await Future.delayed(Duration(seconds: 1));
+
     try {
-      await FirebaseStorage.instance
+      return await FirebaseStorage.instance
           .ref()
           .child('users/${FirebaseAuth.instance.currentUser!.uid}.jpg')
-          .getDownloadURL()
-          .then((value) => urlDownload = value);
-      print('prueba:  $urlDownload');
+          .getDownloadURL();
     } catch (e) {
-      await FirebaseStorage.instance
+      return await FirebaseStorage.instance
           .ref()
           .child('users/avatar.png')
-          .getDownloadURL()
-          .then((value) => urlDownload = value);
-      print('prueba:  $urlDownload');
+          .getDownloadURL();
     }
   }
 
@@ -95,7 +93,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     final user = FirebaseAuth.instance.currentUser!;
-    getUrlImage();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -222,9 +219,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 currentAccountPicture: user.photoURL != null
                     ? CircleAvatar(
                         backgroundImage: NetworkImage(user.photoURL!))
-                    : CircleAvatar(
-                        backgroundImage: NetworkImage(urlDownload),
-                      ),
+                    : FutureBuilder(
+                        future: getUrlImage(),
+                        builder: ((BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else {
+                            return CircleAvatar(
+                              backgroundImage: NetworkImage(snapshot.data!),
+                              radius: 100,
+                            );
+                          }
+                        })),
                 accountName: user.displayName != null
                     ? Text(user.displayName!)
                     : Container(),
