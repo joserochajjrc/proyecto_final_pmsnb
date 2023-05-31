@@ -39,6 +39,7 @@ class ItemSpoonacular extends StatelessWidget {
       child: Stack(
         children: [
           CachedNetworkImage(
+            placeholder: (context, url) => const CircularProgressIndicator(),
             imageUrl: recipeModel.image.toString(),
             fit: BoxFit.cover,
             width: 400,

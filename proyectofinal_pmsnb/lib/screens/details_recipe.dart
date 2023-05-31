@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_html/flutter_html.dart';
 import 'package:proyectofinal_pmsnb/models/ingredients_model.dart';
@@ -27,7 +28,15 @@ class _detailsRecipeState extends State<detailsRecipe> {
                 SliverAppBar(
                   title: Text(widget.recipeModel.title.toString()),
                   expandedHeight: 320,
-                  flexibleSpace: Container(
+                  flexibleSpace: CachedNetworkImage(
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    imageUrl: widget.recipeModel.image.toString(),
+                    fit: BoxFit.cover,
+                    colorBlendMode: BlendMode.multiply,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  /*Container(
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.cover,
@@ -36,7 +45,7 @@ class _detailsRecipeState extends State<detailsRecipe> {
                     child: Container(
                       color: Colors.black.withOpacity(0.5),
                     ),
-                  ),
+                  ),*/
                   pinned: true,
                   bottom: TabBar(
                       labelColor: Colors.white,

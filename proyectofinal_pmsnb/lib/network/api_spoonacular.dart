@@ -9,7 +9,7 @@ class ApiSpoonacular {
   //key2 = "4ca65c42d70f4e7a8c3044e2caf942e7"
 
   final URL =
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=4ca65c42d70f4e7a8c3044e2caf942e7&addRecipeInformation=true&number=100";
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=71fba315d1bc4a768bf0da12276d970f&addRecipeInformation=true&number=100";
 
   Future<List<RecipeModel>?> getAllRecipes() async {
     final response = await http.get(Uri.parse(URL));
@@ -24,7 +24,7 @@ class ApiSpoonacular {
 
   Future<List<ingredientsModel>> getIngredients(String id) async {
     final URL =
-        'https://api.spoonacular.com/recipes/${id}/ingredientWidget.json?apiKey=4ca65c42d70f4e7a8c3044e2caf942e7';
+        'https://api.spoonacular.com/recipes/${id}/ingredientWidget.json?apiKey=71fba315d1bc4a768bf0da12276d970f';
     final response = await http.get(Uri.parse(URL));
     if (response.statusCode == 200) {
       var recipe = jsonDecode(response.body)['ingredients'] as List;

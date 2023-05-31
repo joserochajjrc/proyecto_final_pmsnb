@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,6 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   EmailAuth emailAuth = EmailAuth();
 
   File? _image;
+  var urlDownload = '';
 
   Future getImage(ImageSource source) async {
     try {
@@ -60,6 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     //getRecipes();
+
     apiSpoonacular = ApiSpoonacular();
   }
 
@@ -70,10 +73,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }*/
 
+  getUrlImage() async {
+    try {
+      await FirebaseStorage.instance
+          .ref()
+          .child('users/${FirebaseAuth.instance.currentUser!.uid}.jpg')
+          .getDownloadURL()
+          .then((value) => urlDownload = value);
+      print('prueba:  $urlDownload');
+    } catch (e) {
+      await FirebaseStorage.instance
+          .ref()
+          .child('users/avatar.png')
+          .getDownloadURL()
+          .then((value) => urlDownload = value);
+      print('prueba:  $urlDownload');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
     final user = FirebaseAuth.instance.currentUser!;
+    getUrlImage();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -197,12 +219,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: ListView(
             children: [
               UserAccountsDrawerHeader(
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: user.photoURL != null
-                      ? NetworkImage(user.photoURL!)
-                      : const NetworkImage(
-                          'https://raw.githubusercontent.com/obliviate-dan/Login-Form/master/img/avatar.png'),
-                ),
+                currentAccountPicture: user.photoURL != null
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(user.photoURL!))
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(urlDownload),
+                      ),
                 accountName: user.displayName != null
                     ? Text(user.displayName!)
                     : Container(),

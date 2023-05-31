@@ -4,6 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:proyectofinal_pmsnb/services/email_authentication.dart';
 import 'package:proyectofinal_pmsnb/services/post_collection_fb.dart';
 
@@ -16,15 +18,13 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   EmailAuth emailAuth = EmailAuth();
-  
 
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
- // PostCollection postCollection = PostCollection();
+  var urlDownload = '';
+  // PostCollection postCollection = PostCollection();
 
   Future uploadFirebase() async {
-
-    final urlDownload;
     if (pickedFile == null) {
       urlDownload = await FirebaseStorage.instance
           .ref()
@@ -58,11 +58,35 @@ class _UserScreenState extends State<UserScreen> {
     setState(() {
       pickedFile = image.files.first;
     });
-    uploadFirebase();
+    await uploadFirebase();
+    getUrlImage();
+  }
+
+  getUrlImage() async {
+    try {
+      urlDownload = await FirebaseStorage.instance
+          .ref()
+          .child('users/${FirebaseAuth.instance.currentUser!.uid}.jpg')
+          .getDownloadURL();
+      print('prueba:  $urlDownload');
+    } catch (e) {
+      urlDownload = await FirebaseStorage.instance
+          .ref()
+          .child('users/avatar.png')
+          .getDownloadURL();
+      print('prueba:  $urlDownload');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    getUrlImage();
+
     final user = FirebaseAuth.instance.currentUser!;
     var proveedor = 'assets/logoapp.png';
     for (UserInfo userInfo in user.providerData) {
@@ -90,27 +114,21 @@ class _UserScreenState extends State<UserScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 120),
               child: Stack(
                 children: [
-                  pickedFile == null ? 
-                  user.photoURL != null ? CircleAvatar(
-                    radius: 80,
-                    backgroundImage: NetworkImage(user.photoURL!),
-                  ) : CircleAvatar(
-                    radius: 80,
-                    backgroundImage: AssetImage("assets/avatar.png"),
-                  ) : ClipOval(
-                    
-                    child: Image.file(
-                                      File(pickedFile!.path!),
-                                      width: 220,
-                                      height: 220,
-                                      fit: BoxFit.cover,), 
-                  ),
+                  user.photoURL != null
+                      ? CircleAvatar(
+                          radius: 80,
+                          backgroundImage: NetworkImage(user.photoURL!),
+                        )
+                      : CircleAvatar(
+                          radius: 80,
+                          backgroundImage: NetworkImage(urlDownload),
+                        ),
                   ListTile(
                     onTap: () {
                       selectFile();
                     },
                     horizontalTitleGap: 0.0,
-                    leading: const Icon(Icons.camera_enhance_outlined),
+                    leading: const Icon(Icons.camera_enhance),
                   ),
                 ],
               ),
@@ -118,14 +136,15 @@ class _UserScreenState extends State<UserScreen> {
             const SizedBox(
               height: 32,
             ),
-            
-              const SizedBox(
+            const SizedBox(
               height: 32,
             ),
-            user.displayName != null ? Text(
-              'Nombre: ${user.displayName}',
-              style: const TextStyle(fontSize: 18),
-            ) : Container(),
+            user.displayName != null
+                ? Text(
+                    'Nombre: ${user.displayName}',
+                    style: const TextStyle(fontSize: 18),
+                  )
+                : Container(),
             const SizedBox(
               height: 8,
             ),

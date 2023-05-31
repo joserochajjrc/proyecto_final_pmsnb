@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/post_model.dart';
@@ -27,17 +28,25 @@ class ItemPostWidget extends StatelessWidget {
             spreadRadius: -6.0,
           ),
         ],
-        image: DecorationImage(
+        /*image: DecorationImage(
           colorFilter: ColorFilter.mode(
             Colors.black.withOpacity(0.35),
             BlendMode.multiply,
           ),
           image: NetworkImage(postModel!.imagen.toString()),
           fit: BoxFit.cover,
-        ),
+        ),*/
       ),
       child: Stack(
         children: [
+          CachedNetworkImage(
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            imageUrl: postModel!.imagen.toString(),
+            fit: BoxFit.cover,
+            width: 400,
+            colorBlendMode: BlendMode.multiply,
+            color: Colors.black.withOpacity(0.35),
+          ),
           Align(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0),
